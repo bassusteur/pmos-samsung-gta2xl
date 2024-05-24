@@ -1,0 +1,44 @@
+# Reference: <https://postmarketos.org/devicepkg>
+pkgname=device-samsung-gta2xl
+pkgdesc="samsung Samsung Tab A2 XL Rev05"
+pkgver=0.1
+pkgrel=0
+url="https://postmarketos.org"
+license="MIT"
+arch="aarch64"
+options="!check !archcheck"
+depends="
+	linux-samsung-gta2xl
+	mkbootimg
+	postmarketos-base
+	soc-qcom-msm8953-modem
+"
+makedepends="devicepkg-dev"
+subpackages="$pkgname-nonfree-firmware:nonfree_firmware"
+source="
+	deviceinfo
+	modules-initfs
+"
+
+build() {
+	devicepkg_build $startdir $pkgname
+}
+
+package() {
+	devicepkg_package $startdir $pkgname
+}
+
+nonfree_firmware() {
+	pkgdesc="WiFi, Bluetooth, ADSP, Venus and GPU Firmware"
+	depends="
+		firmware-samsung-gta2xl
+		linux-firmware-qcom
+		wcnss-wlan
+		msm-firmware-loader"
+	mkdir "$subpkgdir"
+}
+
+sha512sums="
+9d1cbb21ec814262fc1621acf975e8678fa6c3bf19f62b2d48196acc6437e9ad8bd7052d83f4b17c51f49a6cf32f87237458a0cb9a94f0a04be415c578123c48  deviceinfo
+e70bae17df23dcaaaea0e2d3616556f04baa23f8ee1357785c0f539bf97282d8ddff53953e155b72689bb73beb38c2da3d08de2a61e866684edfa10a6593885d  modules-initfs
+"

@@ -1,0 +1,64 @@
+# Reference: <https://postmarketos.org/vendorkernel>
+# Kernel config based on: arch/arm64/configs/(CHANGEME!)
+
+pkgname=linux-samsung-gta2xl
+pkgver=6.9.0
+pkgrel=0
+pkgdesc="samsung Samsung Tab A2 XL Rev05 kernel fork"
+arch="aarch64"
+_carch="arm64"
+_flavor="samsung-gta2xl"
+url="https://kernel.org"
+license="GPL-2.0-only"
+options="!strip !check !tracedeps pmb:cross-native"
+makedepends="
+	bash
+	bc
+	bison
+	devicepkg-dev
+	findutils
+	flex
+	openssl-dev
+	perl
+"
+
+# Source
+_repository="linux"
+_commit="eb2cef2c2ae8a703cfe787e7b92ed68b6894925c"
+_config="config-$_flavor.$arch"
+source="
+	$pkgname-$_commit.tar.gz::https://github.com/bassusteur/$_repository/archive/$_commit.tar.gz
+	$_config
+"
+builddir="$srcdir/linux-$_commit"
+
+prepare() {
+	default_prepare
+	cp "$srcdir/config-$_flavor.$arch" .config
+}
+
+build() {
+	unset LDFLAGS
+	make ARCH="$_carch" CC="${CC:-gcc}" \
+		KBUILD_BUILD_VERSION="$((pkgrel + 1 ))-$_flavor"
+}
+
+package() {
+	mkdir -p "$pkgdir"/boot
+
+	make zinstall modules_install dtbs_install \
+		ARCH="$_carch" \
+		INSTALL_PATH="$pkgdir"/boot \
+		INSTALL_MOD_PATH="$pkgdir" \
+		INSTALL_MOD_STRIP=1 \
+		INSTALL_DTBS_PATH="$pkgdir/boot/dtbs"
+	rm -f "$pkgdir"/lib/modules/*/build "$pkgdir"/lib/modules/*/source
+
+	install -Dm644 "$builddir/include/config/kernel.release" \
+		"$pkgdir/usr/share/kernel/$_flavor/kernel.release"
+}
+
+sha512sums="
+452b3a1223e5a0c129cfbd5396616890615ebcdae2b6afc3f2f165dc5713a17bdb9b6d47f58a0965c06b13b15ab69896775ee13145caf2bc9d4f96d81ff44730  linux-samsung-gta2xl-eb2cef2c2ae8a703cfe787e7b92ed68b6894925c.tar.gz
+3aa675ad14070c3a25d9168b8256cfe3ef8eeb5c72d5539544c60eddb4d9a5b9cfa9f11a86806d1a29841989892cd1a3e646fbe5ac70b893b61e5281f3360faf  config-samsung-gta2xl.aarch64
+"

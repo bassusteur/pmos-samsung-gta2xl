@@ -1,0 +1,22 @@
+pkgname=firmware-samsung-gta2xl
+pkgver=1.0
+pkgrel=0
+pkgdesc="Firmware files for Samsung Galaxy Tab A 10.5 (2018)"
+url="https://github.com/UDPSendToFailed/proprietary_vendor_samsung"
+arch="aarch64"
+license="proprietary"
+options="!strip !check !archcheck !spdx !tracedeps pmb:cross-native"
+
+# Source
+_commit="5e97307d5eabde5bf11136b229a491c538c04427"
+_path="gta2xlwifi/proprietary/vendor/firmware/wlan/prima"
+source="$pkgname-WCNSS_qcom_wlan_nv.bin::$url/raw/$_commit/$_path/WCNSS_qcom_wlan_nv.bin"
+
+package() {
+	install -Dm644 "$srcdir"/$pkgname-WCNSS_qcom_wlan_nv.bin \
+		"$pkgdir"/lib/firmware/wlan/prima/WCNSS_qcom_wlan_nv.bin
+}
+
+sha512sums="
+64f60999e07afdd79add3111412b2a8b04366229d409e1d5b6e151c93796dae8e41e948a55ad991d39a34d23c746fc89bc4130818366ab3bbd802ada4b2a5dec  firmware-samsung-gta2xl-WCNSS_qcom_wlan_nv.bin
+"
