@@ -2,7 +2,7 @@
 # Kernel config based on: arch/arm64/configs/(CHANGEME!)
 
 pkgname=linux-samsung-gta2xl
-pkgver=6.9.0
+pkgver=6.9.1
 pkgrel=0
 pkgdesc="samsung Samsung Tab A2 XL Rev05 kernel fork"
 arch="aarch64"
