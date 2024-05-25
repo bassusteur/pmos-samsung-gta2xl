@@ -2,19 +2,26 @@ pkgname=firmware-samsung-gta2xl
 pkgver=1.0
 pkgrel=0
 pkgdesc="Firmware files for Samsung Galaxy Tab A 10.5 (2018)"
-url="https://github.com/bassusteur/proprietary_vendor_samsung"
+url="https://github.com/bassusteur/$pkgname"
 arch="aarch64"
 license="proprietary"
 options="!strip !check !archcheck !spdx !tracedeps pmb:cross-native"
 
 # Source
-_commit="5e97307d5eabde5bf11136b229a491c538c04427"
-_path="gta2xlwifi/proprietary/vendor/firmware/wlan/prima"
-source="$pkgname-WCNSS_qcom_wlan_nv.bin::$url/raw/$_commit/$_path/WCNSS_qcom_wlan_nv.bin"
+_commit="67de3083dc2eb0904ec7992dbc2cce329d20e7f6"
+
+source="$pkgname-$_commit.tar.gz::$url/archive/$_commit/$pkgname-$_commit.tar.gz"
+builddir="$srcdir/$pkgname-$_commit"
+
+_fwdir="/lib/firmware"
 
 package() {
-	install -Dm644 "$srcdir"/$pkgname-WCNSS_qcom_wlan_nv.bin \
-		"$pkgdir"/lib/firmware/wlan/prima/WCNSS_qcom_wlan_nv.bin
+	# Wireless firmware
+	install -Dm644 WCNSS_qcom_wlan_nv.bin -t "$pkgdir/$_fwdir/wlan/prima"
+	install -Dm644 wcnss.mdt -t "$pkgdir/$_fwdir"
+	
+	# GPU firmware
+	install -Dm644 a530_pm4.fw -t "$pkgdir/$_fwdir"
 }
 
 sha512sums="
